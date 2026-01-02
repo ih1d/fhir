@@ -1,0 +1,60 @@
+# HLint configuration for haskell-fhir
+# https://github.com/ndmitchell/hlint
+
+# ============================================================================
+# Severity Settings
+# ============================================================================
+
+# Treat these as errors (fail CI)
+- error: {name: "Use camelCase"}
+- error: {name: "Redundant bracket"}
+- error: {name: "Redundant $"}
+- error: {name: "Redundant do"}
+- error: {name: "Use newtype instead of data"}
+
+# ============================================================================
+# Ignored Hints
+# ============================================================================
+
+# We use explicit signatures for clarity in FHIR types
+- ignore: {name: "Eta reduce"}
+
+# Sometimes explicit is clearer for FHIR domain logic
+- ignore: {name: "Use <$>", within: ["FHIR.Types.Primitives"]}
+
+# ============================================================================
+# Custom Hints
+# ============================================================================
+
+# Prefer Text over String
+- warn: {lhs: "String", rhs: "Text", name: "Use Text instead of String"}
+
+# Encourage strict fields in data types (important for FHIR performance)
+- suggest:
+    lhs: "data Foo = Foo { x :: Bar }"
+    rhs: "data Foo = Foo { x :: !Bar }"
+    name: "Use strict fields in data types"
+
+# ============================================================================
+# Restricted Functions
+# ============================================================================
+
+- functions:
+    # Partial functions - avoid in production code
+    - {name: "head", within: [], message: "Use Data.List.NonEmpty or pattern matching"}
+    - {name: "tail", within: [], message: "Use Data.List.NonEmpty or pattern matching"}
+    - {name: "init", within: [], message: "Use Data.List.NonEmpty or pattern matching"}
+    - {name: "last", within: [], message: "Use Data.List.NonEmpty or pattern matching"}
+    - {name: "!!", within: [], message: "Use safe indexing"}
+    - {name: "fromJust", within: [], message: "Use pattern matching or fromMaybe"}
+    
+    # Avoid in FHIR code - prefer Text
+    - {name: "putStrLn", within: ["FHIR.**"], message: "Use Text.IO for FHIR modules"}
+
+# ============================================================================
+# Module-Specific Rules
+# ============================================================================
+
+# Allow unsafe functions in test code
+- ignore: {name: "Use fromJust", within: ["**Spec", "**Test"]}
+- ignore: {name: "head", within: ["**Spec", "**Test"]}
