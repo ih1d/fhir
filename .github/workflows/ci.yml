@@ -23,5 +23,21 @@ jobs:
       - name: Run HLint Scan
         uses: haskell-actions/hlint-run@v2
         with:
-          path: '["fhir-types/src"]'    
+          path: '["fhir-types/src"]'
           fail-on: warning
+
+  fourmolu:
+    name: Fourmolu
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Run Fourmolu
+        uses: haskell-actions/run-fourmolu@v10
+        with:
+          version: "0.16.2.0"
+          pattern: |
+            fhir-types/src/**/*.hs
+            fhir-json/src/**/*.hs
+            fhir-xml/src/**/*.hs
+            fhir-validation/src/**/*.hs

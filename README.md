@@ -7,10 +7,7 @@
 | Package | Purpose | Phase |
 | --------- | --------- | ------- |
 | `fhir-types` | Core FHIR R4 data types | 1 |
-| `fhir-json` | JSON serialization | 2 |
-| `fhir-xml` | XML serialization | 2 |
-| `fhir-client` | Connect TO other FHIR servers | 2 |
-| `fhir-validation` | Validate against profiles | 3 |
+| `fhir-validation` | Validate against profiles | 2 |
 
 ### Deferred (2027 — Integration Platform)
 
@@ -30,16 +27,14 @@
   fhir/
   ├── cabal.project
   ├── fhir-types/
-  ├── fhir-json/
-  ├── fhir-xml/
   ├── fhir-validation/
   ├── fhir-client/
   └── fhir-server/
 ```
 
 - [X] Configure GHC 9.6+ with recommended extensions
-- [ ] Set up GitHub Actions CI (build, test, hlint, ormolu)
-- [ ] Set up pre-commit hooks (hlint, ormolu)
+- [X] Set up GitHub Actions CI (build, test, hlint, ormolu)
+- [X] Set up pre-commit hooks (hlint, ormolu)
 
 ### Week 2 (Jan 13-19): FHIR Specification Analysis
 
