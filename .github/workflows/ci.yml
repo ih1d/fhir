@@ -1,0 +1,22 @@
+name: Haskell CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+
+jobs:
+  hlint:
+    name: HLint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Run HLint
+        uses: haskell-actions/hlint-setup@v2
+        with:
+          path: '["fhir-types/src"]'
