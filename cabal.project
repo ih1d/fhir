@@ -2,11 +2,7 @@ packages:
     -- Phase 1: Core types (Jan-Feb)
     fhir-types
 
-    -- Phase 2: Serialization (Feb-Mar)
-    fhir-json
-    fhir-xml
-
-    -- Phase 3: Validation engine (Mar-Apr)
+    -- Phase 2: Validation engine (Mar-Apr)
     fhir-validation
 
 -- Use GHC 9.6+
