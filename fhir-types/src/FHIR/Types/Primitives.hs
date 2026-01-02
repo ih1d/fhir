@@ -24,9 +24,9 @@ newtype Code = Code { unCode :: Text }
 -- | A date, or partial date (e.g. just year or year + month) as used in human communication.
 -- The format is YYYY, YYYY-MM, or YYYY-MM-DD, e.g. 2018, 1973-06, or 1905-08-23.
 data Date
-    = DateYear Integer           -- ^ Year only (YYYY)
-    | DateYearMonth Integer Int  -- ^ Year and month (YYYY-MM)
-    | DateFull Day               -- ^ Full date (YYYY-MM-DD)
+    = DateYear !Integer           -- ^ Year only (YYYY)
+    | DateYearMonth !Integer !Int  -- ^ Year and month (YYYY-MM)
+    | DateFull !Day               -- ^ Full date (YYYY-MM-DD)
 
 -- | A date, date-time or partial date (e.g. just year or year + month) as used in human communication.
 -- The format is YYYY, YYYY-MM, YYYY-MM-DD or YYYY-MM-DDThh:mm:ss+zz:zz, e.g. 2018, 1973-06, 1905-08-23,
@@ -36,10 +36,10 @@ data Date
 -- Milliseconds are optionally allowed. Dates SHALL be valid dates. The time "24:00" is not allowed.
 -- Leap Seconds are allowed - see below
 data DateTime
-    = DateTimeYear Integer           -- ^ Year only (YYYY)
-    | DateTimeYearMonth Integer Int  -- ^ Year and month (YYYY-MM)
-    | DateTimeDay Day                -- ^ Full date (YYYY-MM-DD)
-    | DateTimeFull UTCTime           -- ^ Full date-time with timezone
+    = DateTimeYear !Integer           -- ^ Year only (YYYY)
+    | DateTimeYearMonth !Integer !Int  -- ^ Year and month (YYYY-MM)
+    | DateTimeDay !Day                -- ^ Full date (YYYY-MM-DD)
+    | DateTimeFull !UTCTime           -- ^ Full date-time with timezone
 
 -- | A rational number with arbitrary precision.
 -- Do not use a decimal for currencies. Use an extension with a code from ISO 4217.
