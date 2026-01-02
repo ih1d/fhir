@@ -16,7 +16,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Run HLint
+      - name: Run HLint Setup
         uses: haskell-actions/hlint-setup@v2
         with:
           path: '["fhir-types/src"]'
+      - name: Run HLint Scan
+        uses: haskell-actions/hlint-run@v2
+        with:
+          path: '["fhir-types/src"]'    
+          fail-on: warning
