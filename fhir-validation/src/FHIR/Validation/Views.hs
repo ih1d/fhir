@@ -1,8 +1,8 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module FHIR.Validation.Views
-    ( landingPage
-    ) where
+module FHIR.Validation.Views (
+    landingPage,
+) where
 
 import Lucid
 import Lucid.Base (makeAttributes)
@@ -179,24 +179,32 @@ roadmapPhase phase title status description isFirst =
             then div_ [class_ "absolute left-3 top-3 bottom-0 w-px bg-gradient-to-b from-emerald-500 to-slate-700"] ""
             else div_ [class_ "absolute left-3 top-0 bottom-0 w-px bg-slate-700"] ""
         -- Dot
-        div_ [class_ $ "absolute left-0 top-0 w-6 h-6 rounded-full border-2 flex items-center justify-center " <>
-            case status of
-                "Complete" -> "bg-emerald-500 border-emerald-500"
-                "In Progress" -> "bg-slate-900 border-amber-500"
-                _ -> "bg-slate-900 border-slate-600"] $ do
-            case status of
-                "Complete" -> span_ [class_ "text-white text-xs"] "v"
-                "In Progress" -> span_ [class_ "w-2 h-2 bg-amber-500 rounded-full animate-pulse"] ""
-                _ -> span_ [] ""
+        div_
+            [ class_ $
+                "absolute left-0 top-0 w-6 h-6 rounded-full border-2 flex items-center justify-center "
+                    <> case status of
+                        "Complete" -> "bg-emerald-500 border-emerald-500"
+                        "In Progress" -> "bg-slate-900 border-amber-500"
+                        _ -> "bg-slate-900 border-slate-600"
+            ]
+            $ do
+                case status of
+                    "Complete" -> span_ [class_ "text-white text-xs"] "v"
+                    "In Progress" -> span_ [class_ "w-2 h-2 bg-amber-500 rounded-full animate-pulse"] ""
+                    _ -> span_ [] ""
         div_ [class_ "ml-4"] $ do
             div_ [class_ "flex items-center space-x-3 mb-2"] $ do
                 span_ [class_ "text-sm font-medium text-slate-500"] (toHtml phase)
                 span_ [class_ "text-xl font-semibold text-white"] (toHtml title)
-                span_ [class_ $ "text-xs px-2 py-1 rounded " <>
-                    case status of
-                        "Complete" -> "bg-emerald-500/20 text-emerald-400"
-                        "In Progress" -> "bg-amber-500/20 text-amber-400"
-                        _ -> "bg-slate-700 text-slate-400"] (toHtml status)
+                span_
+                    [ class_ $
+                        "text-xs px-2 py-1 rounded "
+                            <> case status of
+                                "Complete" -> "bg-emerald-500/20 text-emerald-400"
+                                "In Progress" -> "bg-amber-500/20 text-amber-400"
+                                _ -> "bg-slate-700 text-slate-400"
+                    ]
+                    (toHtml status)
             p_ [class_ "text-slate-400"] (toHtml description)
 
 techBadge :: String -> Html ()

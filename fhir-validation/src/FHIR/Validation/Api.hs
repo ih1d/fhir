@@ -1,12 +1,12 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE TypeOperators #-}
 
-module FHIR.Validation.Api
-    ( API
-    , api
-    , server
-    , app
-    ) where
+module FHIR.Validation.Api (
+    API,
+    api,
+    server,
+    app,
+) where
 
 import Lucid (Html)
 import Servant
