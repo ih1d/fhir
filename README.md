@@ -38,8 +38,8 @@
 
 ### Week 2 (Jan 13-19): FHIR Specification Analysis
 
-- [ ] Download FHIR R5 specification bundle from hl7.org
-- [ ] Download all StructureDefinitions (JSON format)
+- [X] Download FHIR R5 specification bundle from hl7.org
+- [X] Download all StructureDefinitions (JSON format)
 - [ ] Analyze JSON schema for type generation strategy
 - [ ] Document choice type patterns (value[x])
 - [ ] Document extension patterns (_field)
@@ -48,7 +48,7 @@
 
 ### Week 3 (Jan 20-26): Primitive Types
 
-- [ ] Implement core primitive types module:
+- [X] Implement core primitive types module:
 
 ```haskell
   -- fhir-types/src/FHIR/Types/Primitives.hs
@@ -76,8 +76,8 @@
 
 ### Week 4 (Jan 27 - Feb 2): Complex Data Types
 
-- [ ] Implement Element base type with extensions
-- [ ] Implement core complex types:
+- [X] Implement Element base type with extensions
+- [X] Implement core complex types:
   - Identifier, HumanName, Address, ContactPoint
   - CodeableConcept, Coding, Quantity, Range, Ratio
   - Period, Timing, Attachment, Reference

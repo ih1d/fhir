@@ -1,7 +1,7 @@
 module Main (main) where
 
-import Test.Hspec
 import qualified FHIR.Types.Complex.AttachmentSpec as AttachmentSpec
+import Test.Hspec
 
 main :: IO ()
 main = hspec $ do

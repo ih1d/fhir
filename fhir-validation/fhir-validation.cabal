@@ -1,18 +1,14 @@
 cabal-version:      3.0
 name:               fhir-validation
 version:            0.1.0.0
-synopsis:           FHIR Validation
--- description:
+synopsis:           FHIR Validation Service with Web Interface
 homepage:           https://github.com/ih1d/fhir
 license:            BSD-3-Clause
 license-file:       LICENSE
 author:             Isaac Hiram Lopez Diaz
 maintainer:         isaac.lopez@upr.edu
--- copyright:
 category:           Data
 build-type:         Simple
-extra-doc-files:    CHANGELOG.md
--- extra-source-files:
 
 common warnings
     ghc-options:
@@ -23,21 +19,36 @@ common warnings
         -Wincomplete-uni-patterns
         -Wpartial-fields
         -Wredundant-constraints
-
+        -threaded
+        
 library
     import:           warnings
-    exposed-modules:  MyLib
-    -- other-modules:
-    -- other-extensions:
-    build-depends:    base ^>=4.18.3.0
+    exposed-modules:
+        FHIR.Validation.Api
+        FHIR.Validation.Views
+    build-depends:
+        base ^>=4.18.3.0,
+        servant,
+        servant-server,
+        lucid2,
+        dani-servant-lucid2,
+        text
     hs-source-dirs:   src
+    default-language: Haskell2010
+
+executable fhir-validation-server
+    import:           warnings
+    main-is:          Main.hs
+    build-depends:
+        base ^>=4.18.3.0,
+        fhir-validation,
+        warp
+    hs-source-dirs:   app
     default-language: Haskell2010
 
 test-suite fhir-validation-test
     import:           warnings
     default-language: Haskell2010
-    -- other-modules:
-    -- other-extensions:
     type:             exitcode-stdio-1.0
     hs-source-dirs:   test
     main-is:          Main.hs

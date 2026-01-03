@@ -22,10 +22,28 @@ library
     import:           warnings
     exposed-modules:
         FHIR.Types.Primitives
+        FHIR.Types.Resource
+        FHIR.Types.Meta
+        FHIR.Types.Complex.Address
         FHIR.Types.Complex.Attachment
-    -- other-modules:
+        FHIR.Types.Complex.CodeableConcept
+        FHIR.Types.Complex.Coding
+        FHIR.Types.Complex.ContactPoint
+        FHIR.Types.Complex.Element
+        FHIR.Types.Complex.Extension
+        FHIR.Types.Complex.HumanName
+        FHIR.Types.Complex.Identifier
+        FHIR.Types.Complex.Narrative
+        FHIR.Types.Complex.Period
+        FHIR.Types.Complex.Quantity
+        FHIR.Types.Complex.Range
+        FHIR.Types.Complex.Ratio
+        FHIR.Types.Complex.Reference
     default-extensions:
         DeriveGeneric
+        LambdaCase
+        OverloadedStrings
+        RecordWildCards
     build-depends:    base ^>=4.18.3.0
                     , text
                     , aeson

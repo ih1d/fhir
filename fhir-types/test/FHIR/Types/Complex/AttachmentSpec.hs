@@ -2,7 +2,7 @@
 
 module FHIR.Types.Complex.AttachmentSpec (spec) where
 
-import Data.Aeson (decode, encode, eitherDecode)
+import Data.Aeson (decode, eitherDecode, encode)
 import Data.ByteString.Lazy (ByteString)
 import FHIR.Types.Complex.Attachment (Attachment (..))
 import FHIR.Types.Primitives
