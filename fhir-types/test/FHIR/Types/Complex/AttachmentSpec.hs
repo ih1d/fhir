@@ -4,7 +4,7 @@ module FHIR.Types.Complex.AttachmentSpec (spec) where
 
 import Data.Aeson (decode, encode, eitherDecode)
 import Data.ByteString.Lazy (ByteString)
-import FHIR.Types.Complex.Attachment (Attachment(..))
+import FHIR.Types.Complex.Attachment (Attachment (..))
 import FHIR.Types.Primitives
 import Test.Hspec
 
@@ -15,19 +15,32 @@ spec = describe "Attachment" $ do
             let json = completeAttachmentJson
             case eitherDecode json of
                 Right att -> do
-                    unCode (contentType att) `shouldBe` "image/png"
-                    unCode (language att) `shouldBe` "en"
-                    unURL (url att) `shouldBe` "https://example.com/image.png"
-                    title att `shouldBe` "X-Ray Image"
-                    unPositiveInt (height att) `shouldBe` 600
-                    unPositiveInt (width att) `shouldBe` 800
+                    fmap unCode (contentType att) `shouldBe` Just "image/png"
+                    fmap unCode (language att) `shouldBe` Just "en"
+                    fmap unURL (url att) `shouldBe` Just "https://example.com/image.png"
+                    title att `shouldBe` Just "X-Ray Image"
+                    fmap unPositiveInt (height att) `shouldBe` Just 600
+                    fmap unPositiveInt (width att) `shouldBe` Just 800
                 Left err -> expectationFailure $ "Failed to parse: " <> err
 
-        it "fails on missing required fields" $ do
-            let json = "{\"contentType\": \"image/png\"}" :: ByteString
+        it "parses a minimal attachment (empty object)" $ do
+            let json = "{}" :: ByteString
             case eitherDecode json :: Either String Attachment of
-                Right _ -> expectationFailure "Should have failed"
-                Left _ -> pure ()
+                Right att -> do
+                    contentType att `shouldBe` Nothing
+                    title att `shouldBe` Nothing
+                    height att `shouldBe` Nothing
+                Left err -> expectationFailure $ "Failed to parse: " <> err
+
+        it "parses a partial attachment" $ do
+            let json = "{\"contentType\": \"image/png\", \"title\": \"Test\"}" :: ByteString
+            case eitherDecode json :: Either String Attachment of
+                Right att -> do
+                    fmap unCode (contentType att) `shouldBe` Just "image/png"
+                    title att `shouldBe` Just "Test"
+                    language att `shouldBe` Nothing
+                    height att `shouldBe` Nothing
+                Left err -> expectationFailure $ "Failed to parse: " <> err
 
     describe "ToJSON" $ do
         it "roundtrips through JSON" $ do
@@ -37,8 +50,20 @@ spec = describe "Attachment" $ do
                     let reencoded = encode (att :: Attachment)
                     case decode reencoded of
                         Just att' -> do
-                            unCode (contentType att') `shouldBe` unCode (contentType att)
+                            fmap unCode (contentType att') `shouldBe` fmap unCode (contentType att)
                             title att' `shouldBe` title att
+                        Nothing -> expectationFailure "Failed to decode re-encoded JSON"
+                Nothing -> expectationFailure "Failed to decode initial JSON"
+
+        it "roundtrips minimal attachment" $ do
+            let json = "{}" :: ByteString
+            case decode json of
+                Just att -> do
+                    let reencoded = encode (att :: Attachment)
+                    case decode reencoded of
+                        Just att' -> do
+                            contentType att' `shouldBe` Nothing
+                            title att' `shouldBe` Nothing
                         Nothing -> expectationFailure "Failed to decode re-encoded JSON"
                 Nothing -> expectationFailure "Failed to decode initial JSON"
 

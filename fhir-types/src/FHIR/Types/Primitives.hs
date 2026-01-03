@@ -1,15 +1,11 @@
-{-# LANGUAGE OverloadedStrings #-}
-
 module FHIR.Types.Primitives where
 
 import Data.Aeson
 import Data.Int (Int32, Int64)
 import Data.Scientific (Scientific)
-import Data.Text (Text)
-import qualified Data.Text as T
+import Data.Text (Text, pack, unpack)
 import Data.Time (Day, DiffTime, UTCTime, defaultTimeLocale, parseTimeM)
-import Data.UUID (UUID)
-import qualified Data.UUID as UUID
+import Data.UUID (UUID, fromText, toText)
 import Data.Word (Word32)
 import Text.Read (readMaybe)
 
@@ -17,6 +13,7 @@ import Text.Read (readMaybe)
 base64Binary content does not include any whitespace or line feeds.
 -}
 newtype Base64Binary = Base64Binary {unBase64Binary :: Text}
+    deriving (Show, Eq)
 
 instance ToJSON Base64Binary where
     toJSON (Base64Binary t) = String t
@@ -29,6 +26,7 @@ The canonical type differs from a uri in that it has special meaning in this spe
 and in that it may have a version appended, separated by a vertical bar (|)
 -}
 newtype Canonical = Canonical {unCanonical :: Text}
+    deriving (Show, Eq)
 
 instance ToJSON Canonical where
     toJSON (Canonical t) = String t
@@ -41,6 +39,7 @@ Technically, a code is restricted to a string which has at least one character a
 no leading or trailing whitespace, and where there is no whitespace other than single spaces in the contents
 -}
 newtype Code = Code {unCode :: Text}
+    deriving (Show, Eq)
 
 instance ToJSON Code where
     toJSON (Code t) = String t
@@ -58,15 +57,16 @@ data Date
       DateYearMonth !Integer !Int
     | -- | Full date (YYYY-MM-DD)
       DateFull !Day
+    deriving (Show, Eq)
 
 instance ToJSON Date where
-    toJSON (DateYear y) = String $ T.pack $ show y
-    toJSON (DateYearMonth y m) = String $ T.pack $ show y <> "-" <> padTwo m
-    toJSON (DateFull d) = String $ T.pack $ show d
+    toJSON (DateYear y) = String $ pack $ show y
+    toJSON (DateYearMonth y m) = String $ pack $ show y <> "-" <> padTwo m
+    toJSON (DateFull d) = String $ pack $ show d
 
 instance FromJSON Date where
     parseJSON = withText "Date" $ \t ->
-        let s = T.unpack t
+        let s = unpack t
          in case length s of
                 4 -> case readMaybe s of
                     Just y -> pure $ DateYear y
@@ -96,16 +96,17 @@ data DateTime
       DateTimeDay !Day
     | -- | Full date-time with timezone
       DateTimeFull !UTCTime
+    deriving (Show, Eq)
 
 instance ToJSON DateTime where
-    toJSON (DateTimeYear y) = String $ T.pack $ show y
-    toJSON (DateTimeYearMonth y m) = String $ T.pack $ show y <> "-" <> padTwo m
-    toJSON (DateTimeDay d) = String $ T.pack $ show d
+    toJSON (DateTimeYear y) = String $ pack $ show y
+    toJSON (DateTimeYearMonth y m) = String $ pack $ show y <> "-" <> padTwo m
+    toJSON (DateTimeDay d) = String $ pack $ show d
     toJSON (DateTimeFull t) = toJSON t
 
 instance FromJSON DateTime where
     parseJSON = withText "DateTime" $ \t ->
-        let s = T.unpack t
+        let s = unpack t
          in case length s of
                 4 -> case readMaybe s of
                     Just y -> pure $ DateTimeYear y
@@ -122,6 +123,7 @@ instance FromJSON DateTime where
 Do not use a decimal for currencies. Use an extension with a code from ISO 4217.
 -}
 newtype Decimal = Decimal {unDecimal :: Scientific}
+    deriving (Show, Eq)
 
 instance ToJSON Decimal where
     toJSON (Decimal s) = Number s
@@ -135,6 +137,7 @@ meets these constraints. Ids are case-sensitive.
 Regex: [A-Za-z0-9\-\.]{1,64}
 -}
 newtype Id = Id {unId :: Text}
+    deriving (Show, Eq)
 
 instance ToJSON Id where
     toJSON (Id t) = String t
@@ -148,6 +151,7 @@ Note: This is intended for when precisely observed times are required,
 typically system logs etc., and not human-reported times.
 -}
 newtype Instant = Instant {unInstant :: UTCTime}
+    deriving (Show, Eq)
 
 instance ToJSON Instant where
     toJSON (Instant t) = toJSON t
@@ -157,6 +161,7 @@ instance FromJSON Instant where
 
 -- | A signed integer in the range −2,147,483,648..2,147,483,647 (32-bit)
 newtype Integer' = Integer' {unInteger :: Int32}
+    deriving (Show, Eq)
 
 instance ToJSON Integer' where
     toJSON (Integer' n) = toJSON n
@@ -168,18 +173,20 @@ instance FromJSON Integer' where
 This type is defined to allow for record/time counters that can get very large.
 -}
 newtype Integer64 = Integer64 {unInteger64 :: Int64}
+    deriving (Show, Eq)
 
 instance ToJSON Integer64 where
-    toJSON (Integer64 n) = String $ T.pack $ show n
+    toJSON (Integer64 n) = String $ pack $ show n
 
 instance FromJSON Integer64 where
     parseJSON = withText "Integer64" $ \t ->
-        case readMaybe (T.unpack t) of
+        case readMaybe (unpack t) of
             Just n -> pure $ Integer64 n
             Nothing -> fail "Invalid integer64"
 
 -- | A FHIR string that may contain markdown syntax for optional processing.
 newtype Markdown = Markdown {unMarkdown :: Text}
+    deriving (Show, Eq)
 
 instance ToJSON Markdown where
     toJSON (Markdown t) = String t
@@ -191,6 +198,7 @@ instance FromJSON Markdown where
 OIDs are globally unique for all time and all contexts.
 -}
 newtype Oid = Oid {unOid :: Text}
+    deriving (Show, Eq)
 
 instance ToJSON Oid where
     toJSON (Oid t) = String t
@@ -200,6 +208,7 @@ instance FromJSON Oid where
 
 -- | Any positive integer in the range 1..2,147,483,647
 newtype PositiveInt = PositiveInt {unPositiveInt :: Word32}
+    deriving (Show, Eq)
 
 instance ToJSON PositiveInt where
     toJSON (PositiveInt n) = toJSON n
@@ -216,6 +225,7 @@ Strings SHOULD NOT contain Unicode character points below 32, except for
 u0009 (horizontal tab), u000D (carriage return) and u000A (line feed).
 -}
 newtype FhirString = FhirString {unFhirString :: Text}
+    deriving (Show, Eq)
 
 instance ToJSON FhirString where
     toJSON (FhirString t) = String t
@@ -229,6 +239,7 @@ receiver discretion. The time "24:00" SHALL NOT be used. A timezone offset SHALL
 Times can be converted to a Duration since midnight.
 -}
 newtype Time = Time {unTime :: DiffTime}
+    deriving (Show, Eq)
 
 instance ToJSON Time where
     toJSON (Time t) =
@@ -236,16 +247,17 @@ instance ToJSON Time where
             hours = totalSecs `div` 3600
             mins = (totalSecs `mod` 3600) `div` 60
             secs = totalSecs `mod` 60
-         in String $ T.pack $ padTwo hours <> ":" <> padTwo mins <> ":" <> padTwo secs
+         in String $ pack $ padTwo hours <> ":" <> padTwo mins <> ":" <> padTwo secs
 
 instance FromJSON Time where
     parseJSON = withText "Time" $ \t ->
-        case parseTimeM True defaultTimeLocale "%H:%M:%S" (T.unpack t) of
+        case parseTimeM True defaultTimeLocale "%H:%M:%S" (unpack t) of
             Just tod -> pure $ Time tod
             Nothing -> fail "Invalid time format (expected HH:MM:SS)"
 
 -- | Any non-negative integer in the range 0..2,147,483,647
 newtype UnsignedInt = UnsignedInt {unUnsignedInt :: Word32}
+    deriving (Show, Eq)
 
 instance ToJSON UnsignedInt where
     toJSON (UnsignedInt n) = toJSON n
@@ -257,6 +269,7 @@ instance FromJSON UnsignedInt where
 URIs are case sensitive. For UUID (urn:uuid:53fefa32-fcbb-4ff8-8a92-55ee120877b7) use all lowercase
 -}
 newtype URI = URI {unURI :: Text}
+    deriving (Show, Eq)
 
 instance ToJSON URI where
     toJSON (URI t) = String t
@@ -268,6 +281,7 @@ instance FromJSON URI where
 Common URL protocols are http{s}:, ftp:, mailto: and mllp:, though many others are defined
 -}
 newtype URL = URL {unURL :: Text}
+    deriving (Show, Eq)
 
 instance ToJSON URL where
     toJSON (URL t) = String t
@@ -279,13 +293,14 @@ instance FromJSON URL where
 See RFC 4122 for the definition of UUID.
 -}
 newtype Uuid = Uuid {unUuid :: UUID}
+    deriving (Show, Eq)
 
 instance ToJSON Uuid where
-    toJSON (Uuid u) = String $ UUID.toText u
+    toJSON (Uuid u) = String $ toText u
 
 instance FromJSON Uuid where
     parseJSON = withText "Uuid" $ \t ->
-        case UUID.fromText t of
+        case fromText t of
             Just u -> pure $ Uuid u
             Nothing -> fail "Invalid UUID"
 
