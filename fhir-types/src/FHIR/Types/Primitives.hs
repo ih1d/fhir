@@ -7,7 +7,7 @@ import Data.Int (Int32, Int64)
 import Data.Scientific (Scientific)
 import Data.Text (Text)
 import qualified Data.Text as T
-import Data.Time (Day, DiffTime, UTCTime, parseTimeM, defaultTimeLocale)
+import Data.Time (Day, DiffTime, UTCTime, defaultTimeLocale, parseTimeM)
 import Data.UUID (UUID)
 import qualified Data.UUID as UUID
 import Data.Word (Word32)
@@ -67,17 +67,17 @@ instance ToJSON Date where
 instance FromJSON Date where
     parseJSON = withText "Date" $ \t ->
         let s = T.unpack t
-        in case length s of
-            4 -> case readMaybe s of
-                Just y -> pure $ DateYear y
-                Nothing -> fail "Invalid year"
-            7 -> case (readMaybe (take 4 s), readMaybe (drop 5 s)) of
-                (Just y, Just m) | m >= 1 && m <= 12 -> pure $ DateYearMonth y m
-                _ -> fail "Invalid year-month"
-            10 -> case parseTimeM True defaultTimeLocale "%Y-%m-%d" s of
-                Just d -> pure $ DateFull d
-                Nothing -> fail "Invalid date"
-            _ -> fail "Invalid date format"
+         in case length s of
+                4 -> case readMaybe s of
+                    Just y -> pure $ DateYear y
+                    Nothing -> fail "Invalid year"
+                7 -> case (readMaybe (take 4 s), readMaybe (drop 5 s)) of
+                    (Just y, Just m) | m >= 1 && m <= 12 -> pure $ DateYearMonth y m
+                    _ -> fail "Invalid year-month"
+                10 -> case parseTimeM True defaultTimeLocale "%Y-%m-%d" s of
+                    Just d -> pure $ DateFull d
+                    Nothing -> fail "Invalid date"
+                _ -> fail "Invalid date format"
 
 {- | A date, date-time or partial date (e.g. just year or year + month) as used in human communication.
 The format is YYYY, YYYY-MM, YYYY-MM-DD or YYYY-MM-DDThh:mm:ss+zz:zz, e.g. 2018, 1973-06, 1905-08-23,
@@ -106,17 +106,17 @@ instance ToJSON DateTime where
 instance FromJSON DateTime where
     parseJSON = withText "DateTime" $ \t ->
         let s = T.unpack t
-        in case length s of
-            4 -> case readMaybe s of
-                Just y -> pure $ DateTimeYear y
-                Nothing -> fail "Invalid year"
-            7 -> case (readMaybe (take 4 s), readMaybe (drop 5 s)) of
-                (Just y, Just m) | m >= 1 && m <= 12 -> pure $ DateTimeYearMonth y m
-                _ -> fail "Invalid year-month"
-            10 -> case parseTimeM True defaultTimeLocale "%Y-%m-%d" s of
-                Just d -> pure $ DateTimeDay d
-                Nothing -> fail "Invalid date"
-            _ -> DateTimeFull <$> parseJSON (String t)
+         in case length s of
+                4 -> case readMaybe s of
+                    Just y -> pure $ DateTimeYear y
+                    Nothing -> fail "Invalid year"
+                7 -> case (readMaybe (take 4 s), readMaybe (drop 5 s)) of
+                    (Just y, Just m) | m >= 1 && m <= 12 -> pure $ DateTimeYearMonth y m
+                    _ -> fail "Invalid year-month"
+                10 -> case parseTimeM True defaultTimeLocale "%Y-%m-%d" s of
+                    Just d -> pure $ DateTimeDay d
+                    Nothing -> fail "Invalid date"
+                _ -> DateTimeFull <$> parseJSON (String t)
 
 {- | A rational number with arbitrary precision.
 Do not use a decimal for currencies. Use an extension with a code from ISO 4217.
@@ -236,7 +236,7 @@ instance ToJSON Time where
             hours = totalSecs `div` 3600
             mins = (totalSecs `mod` 3600) `div` 60
             secs = totalSecs `mod` 60
-        in String $ T.pack $ padTwo hours <> ":" <> padTwo mins <> ":" <> padTwo secs
+         in String $ T.pack $ padTwo hours <> ":" <> padTwo mins <> ":" <> padTwo secs
 
 instance FromJSON Time where
     parseJSON = withText "Time" $ \t ->

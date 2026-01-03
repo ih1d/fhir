@@ -11,7 +11,7 @@ import GHC.Generics (Generic)
 data Attachment = Attachment
     { contentType :: !Code
     , language :: !Code
-    , attachmentData :: !Base64Binary  -- "data" in JSON
+    , attachmentData :: !Base64Binary -- "data" in JSON
     , url :: !URL
     , size :: !Integer64
     , hash :: !Base64Binary
