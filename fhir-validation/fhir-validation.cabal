@@ -3,8 +3,6 @@ name:               fhir-validation
 version:            0.1.0.0
 synopsis:           FHIR Validation Service with Web Interface
 homepage:           https://github.com/ih1d/fhir
-license:            BSD-3-Clause
-license-file:       LICENSE
 author:             Isaac Hiram Lopez Diaz
 maintainer:         isaac.lopez@upr.edu
 category:           Data
